@@ -14,8 +14,8 @@ function App() {
 				flexDirection: "column",
 			}}
 		>
-			<Navbar />
 			<Router>
+				<Navbar />
 				<Route exact path="/" component={HomePage} />
 				<Route exact path="/app" component={AppMain} />
 			</Router>
