@@ -1,0 +1,12 @@
+.navbar {
+	height: 64px;
+	background-color: #efefef;
+	display: flex;
+	align-items: center;
+	padding: 10px 40px;
+}
+
+.navbar-toolbar {
+	display: flex;
+	flex: 1;
+}
