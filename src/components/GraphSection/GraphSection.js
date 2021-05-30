@@ -1,3 +1,5 @@
+import { Button } from "@chakra-ui/button";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
 	Divider,
 	Flex,
@@ -13,6 +15,8 @@ import "./GraphSection.css";
 
 const GraphSection = () => {
 	const [gender, setGender] = useState("both");
+	const [chart, setChart] = useState("bar");
+	const [subjects, setSubjects] = useState("all");
 
 	return (
 		<div className="graph-section">
@@ -36,7 +40,23 @@ const GraphSection = () => {
 					</RadioGroup>
 					<Divider size="lg" style={{ margin: "20px 0" }} />
 					<Heading as="h3" size="lg" style={{ marginBottom: 20 }}>
-						2. Select the attributes
+						2. Select type of chart
+					</Heading>
+					<Select
+						placeholder="Select chart type"
+						variant="filled"
+						value={chart}
+						onChange={(e) => setChart(e.target.value)}
+					>
+						<option value="bar">Bar Chart</option>
+						<option value="pie">Pie Chart</option>
+						<option value="scatter">Scatter Plot</option>
+						<option value="hist">Histogram</option>
+					</Select>
+					<Divider size="lg" style={{ margin: "20px 0" }} />
+
+					<Heading as="h3" size="lg" style={{ marginBottom: 20 }}>
+						3. Select the attributes
 					</Heading>
 					<Flex>
 						<Select
@@ -56,6 +76,35 @@ const GraphSection = () => {
 							variant="filled"
 						></Select>
 					</Flex>
+					<Divider size="lg" style={{ margin: "20px 0" }} />
+					<Heading as="h3" size="lg" style={{ marginBottom: 20 }}>
+						4. Filter Subjects
+					</Heading>
+					<RadioGroup value={subjects} onChange={setSubjects}>
+						<Stack direction="row" spacing={10}>
+							<Radio value="all" colorScheme="teal">
+								All subjects
+							</Radio>
+							<Radio value="science" colorScheme="teal">
+								Science
+							</Radio>
+							<Radio value="commerce" colorScheme="teal">
+								Commerce
+							</Radio>
+							<Radio value="arts" colorScheme="teal">
+								Arts
+							</Radio>
+						</Stack>
+					</RadioGroup>
+
+					<Button
+						variant="solid"
+						colorScheme="teal"
+						rightIcon={<ArrowForwardIcon />}
+						style={{ margin: "40px 0" }}
+					>
+						Generate
+					</Button>
 				</div>
 				<div className="graph-inputs">
 					<div className="img-output"></div>

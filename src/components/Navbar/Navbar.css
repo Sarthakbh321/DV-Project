@@ -5,6 +5,9 @@
 	align-items: center;
 	padding: 10px 40px;
 	box-shadow: 0 5px 10px #ddd;
+	position: sticky;
+	top: 0;
+	z-index: 100;
 }
 
 .navbar-toolbar {
