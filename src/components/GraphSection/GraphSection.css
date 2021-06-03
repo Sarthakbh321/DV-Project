@@ -6,6 +6,9 @@
 
 .graph-inputs {
 	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 }
 
 .img-output {
@@ -13,4 +16,12 @@
 	height: 400px;
 	border: 2px dashed #777;
 	border-radius: 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.res-img {
+	width: 98%;
+	height: 100%;
 }

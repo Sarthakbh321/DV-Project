@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/layout";
 import { Radio, RadioGroup } from "@chakra-ui/radio";
 import { Select } from "@chakra-ui/select";
+import axios from "axios";
 import React, { useState } from "react";
 import "./GraphSection.css";
 
@@ -17,6 +18,37 @@ const GraphSection = () => {
 	const [gender, setGender] = useState("both");
 	const [chart, setChart] = useState("bar");
 	const [subjects, setSubjects] = useState("all");
+
+	const [btnLoading, setBtnLoading] = useState(false);
+
+	const [b64img, setB64img] = useState(null);
+
+	const generate = async () => {
+		const url = `${process.env.REACT_APP_BACKEND_URL}/generate`;
+
+		const data = {
+			params: {
+				x_axis: "sl_no",
+				y_axis: "salary",
+				filter: {
+					gender,
+				},
+			},
+		};
+
+		setBtnLoading(true);
+		try {
+			await axios.post(url, data).then((res) => {
+				console.log(res.data);
+
+				setB64img(res.data.image);
+			});
+		} catch (error) {
+			console.log(error);
+		}
+
+		setBtnLoading(false);
+	};
 
 	return (
 		<div className="graph-section">
@@ -27,10 +59,10 @@ const GraphSection = () => {
 					</Heading>
 					<RadioGroup value={gender} onChange={setGender}>
 						<Stack direction="row" spacing={10}>
-							<Radio value="male" colorScheme="teal">
+							<Radio value="M" colorScheme="teal">
 								Male
 							</Radio>
-							<Radio value="female" colorScheme="teal">
+							<Radio value="F" colorScheme="teal">
 								Female
 							</Radio>
 							<Radio value="both" colorScheme="teal">
@@ -102,12 +134,23 @@ const GraphSection = () => {
 						colorScheme="teal"
 						rightIcon={<ArrowForwardIcon />}
 						style={{ margin: "40px 0" }}
+						isLoading={btnLoading}
+						loadingText="Generating..."
+						onClick={generate}
 					>
 						Generate
 					</Button>
 				</div>
 				<div className="graph-inputs">
-					<div className="img-output"></div>
+					<div className="img-output">
+						{b64img ? (
+							<img
+								src={`data:image/png;base64, ${b64img}`}
+								alt="generated graph"
+								className="res-img"
+							/>
+						) : null}
+					</div>
 				</div>
 			</SimpleGrid>
 		</div>
