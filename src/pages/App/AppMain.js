@@ -7,7 +7,12 @@ import "./AppMain.css";
 
 const AppMain = () => {
 	return (
-		<div className="app-main">
+		<div
+			className="app-main"
+			style={{
+				background: "url('/images/bg.png')",
+			}}
+		>
 			<Heading as="h2" size="md">
 				The dataset used can be found{" "}
 				<Link

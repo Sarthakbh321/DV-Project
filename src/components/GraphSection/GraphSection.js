@@ -1,4 +1,5 @@
 import { Button } from "@chakra-ui/button";
+import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
 	Divider,
@@ -10,28 +11,45 @@ import {
 } from "@chakra-ui/layout";
 import { Radio, RadioGroup } from "@chakra-ui/radio";
 import { Select } from "@chakra-ui/select";
+import { Switch } from "@chakra-ui/switch";
 import axios from "axios";
 import React, { useState } from "react";
+import { allAttributes, translateAttribute } from "../../utils/attributes";
 import "./GraphSection.css";
 
 const GraphSection = () => {
 	const [gender, setGender] = useState("both");
 	const [chart, setChart] = useState("bar");
+	const [xAxis, setXAxis] = useState("sl_no");
+	const [yAxis, setYAxis] = useState("salary");
+
 	const [subjects, setSubjects] = useState("all");
+	const [legend, setLegend] = useState(false);
 
 	const [btnLoading, setBtnLoading] = useState(false);
 
 	const [b64img, setB64img] = useState(null);
+
+	const handleXChange = (e) => {
+		setXAxis(e.target.value);
+	};
+
+	const handleYChange = (e) => {
+		setYAxis(e.target.value);
+	};
 
 	const generate = async () => {
 		const url = `${process.env.REACT_APP_BACKEND_URL}/generate`;
 
 		const data = {
 			params: {
-				x_axis: "sl_no",
-				y_axis: "salary",
+				chart,
+				x_axis: xAxis,
+				y_axis: yAxis,
 				filter: {
 					gender,
+					legend,
+					subjects,
 				},
 			},
 		};
@@ -59,14 +77,17 @@ const GraphSection = () => {
 					</Heading>
 					<RadioGroup value={gender} onChange={setGender}>
 						<Stack direction="row" spacing={10}>
+							<Radio value="both" colorScheme="teal">
+								No Filter
+							</Radio>
 							<Radio value="M" colorScheme="teal">
 								Male
 							</Radio>
 							<Radio value="F" colorScheme="teal">
 								Female
 							</Radio>
-							<Radio value="both" colorScheme="teal">
-								Both
+							<Radio value="O" colorScheme="teal">
+								Others
 							</Radio>
 						</Stack>
 					</RadioGroup>
@@ -94,19 +115,42 @@ const GraphSection = () => {
 						<Select
 							placeholder="Select attribute"
 							variant="filled"
-						></Select>
-						<Text
-							color="teal"
-							fontWeight="800"
-							style={{ margin: "0 10px", display: "flex" }}
-							alignItems="center"
+							onChange={handleXChange}
+							value={xAxis}
 						>
-							VS
-						</Text>
-						<Select
-							placeholder="Select attribute"
-							variant="filled"
-						></Select>
+							{allAttributes.map((attr, i) => (
+								<option value={attr} key={i}>
+									{translateAttribute[attr]}
+								</option>
+							))}
+						</Select>
+						{chart !== "pie" && chart !== "hist" ? (
+							<>
+								<Text
+									color="teal"
+									fontWeight="800"
+									style={{
+										margin: "0 10px",
+										display: "flex",
+									}}
+									alignItems="center"
+								>
+									VS
+								</Text>
+								<Select
+									placeholder="Select attribute"
+									variant="filled"
+									value={yAxis}
+									onChange={handleYChange}
+								>
+									{allAttributes.map((attr, i) => (
+										<option value={attr} key={i}>
+											{translateAttribute[attr]}
+										</option>
+									))}
+								</Select>
+							</>
+						) : null}
 					</Flex>
 					<Divider size="lg" style={{ margin: "20px 0" }} />
 					<Heading as="h3" size="lg" style={{ marginBottom: 20 }}>
@@ -117,17 +161,34 @@ const GraphSection = () => {
 							<Radio value="all" colorScheme="teal">
 								All subjects
 							</Radio>
-							<Radio value="science" colorScheme="teal">
+							<Radio value={"Sci&Tech"} colorScheme="teal">
 								Science
 							</Radio>
-							<Radio value="commerce" colorScheme="teal">
+							<Radio value={"Comm&Mgmt"} colorScheme="teal">
 								Commerce
 							</Radio>
-							<Radio value="arts" colorScheme="teal">
-								Arts
+							<Radio value={"Others"} colorScheme="teal">
+								Others
 							</Radio>
 						</Stack>
 					</RadioGroup>
+					<Divider size="lg" style={{ margin: "20px 0" }} />
+					<Heading as="h3" size="lg" style={{ marginBottom: 20 }}>
+						5. More Options
+					</Heading>
+					<Stack direction="row" spacing={10}>
+						<FormControl display="flex" alignItems="center">
+							<FormLabel htmlFor="labels" mb="0">
+								Labels?
+							</FormLabel>
+							<Switch
+								id="labels"
+								colorScheme="teal"
+								value={legend}
+								onChange={(e) => setLegend(e.target.checked)}
+							/>
+						</FormControl>
+					</Stack>
 
 					<Button
 						variant="solid"
